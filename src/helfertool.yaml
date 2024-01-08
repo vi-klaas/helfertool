@@ -5,8 +5,8 @@
 # Relative paths are relative to the git directory, absolute paths
 # are also possible.
 files:
-    static: "static"
-    media: "media"
+    static: "/staticfiles"
+    media: "/media"
     tmp: "/tmp"
 
 # Language settings
@@ -27,8 +27,8 @@ language:
 # Database connection
 database:
     # SQLite
-    backend: "sqlite3"
-    name: "db.sqlite3"
+#    backend: "sqlite3"
+#    name: "db.sqlite3"
 
     # MySQL
     #backend: "mysql"
@@ -39,12 +39,12 @@ database:
     #port: 3306
 
     # PostgreSQL
-    #backend: "postgresql"
-    #name: "helfertool"
-    #user: "helfertool"
-    #password: "<PASSWORD>"
-    #host: 127.0.0.1
-    #port: 5432
+    backend: "postgresql"
+    name: "helfertool"
+    user: "helfertool"
+    password: "uvltMrNNfCKWPJ7yr4XnI7"
+    host: db
+    port: 5432
 
     # Additional options like an init_command
     # Refer to the Django documentation for further options
@@ -57,11 +57,11 @@ rabbitmq:
     vhost: ""
 
     # Login credentials
-    user: "guest"
-    password: "guest"
+    user: "roger"
+    password: "pass1carrot"
 
     # Hostname and port
-    host: 127.0.0.1
+    host: rabbitmq
     port: 5672
 
 # Mail server and settings

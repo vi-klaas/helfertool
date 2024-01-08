@@ -1,0 +1,32 @@
+helfertool.viklaas.com {
+
+    # Redirect www to non-www
+    @www host www.helfertool.viklaas.com
+    redir @www https://helfertool.viklaas.com{uri}
+
+    # Reverse proxy to upstream server
+    reverse_proxy / http://127.0.0.1:8000 {
+        header_up Host {host}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # HSTS header (Strict-Transport-Security)
+    header Strict-Transport-Security "max-age=31536000;"
+
+    # Serve static error page on proxy error
+    handle_errors {
+        @502 error 502
+        rewrite @502 /unavailable.html
+        root * /srv/helfertool/
+        file_server
+    }
+
+    # Set maximum allowed size for client request bodies
+    client_max_body_size 50M
+
+    # Logging
+    log {
+        output file /var/log/caddy/helfertool.viklaas.com.log
+    }
+}
