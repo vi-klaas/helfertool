@@ -32,3 +32,4 @@ Session.vim
 /src/celerybeat-schedule.db
 /test/container/data/db.sqlite3
 /test/container/data/tmp/
+/my_helfertool.yaml

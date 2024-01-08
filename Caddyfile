@@ -1,11 +1,18 @@
+#{
+#  acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+#}
+
 helfertool.viklaas.com {
 
     # Redirect www to non-www
-    @www host www.helfertool.viklaas.com
-    redir @www https://helfertool.viklaas.com{uri}
+#    @www host www.helfertool.viklaas.com
+#    redir @www https://helfertool.viklaas.com{uri}
+#    handle {
+#        reverse_proxy web:8000
+#    }
 
     # Reverse proxy to upstream server
-    reverse_proxy / http://127.0.0.1:8000 {
+    reverse_proxy web:8000 {
         header_up Host {host}
         header_up X-Forwarded-For {remote}
         header_up X-Forwarded-Proto {scheme}
@@ -14,17 +21,22 @@ helfertool.viklaas.com {
     # HSTS header (Strict-Transport-Security)
     header Strict-Transport-Security "max-age=31536000;"
 
+    # Serve static files from /static
+#    @static path /static/*
+#    handle @static {
+#        root * /staticfiles  # Set the root directory for static files
+#        file_server  # Serve static files
+#    }
     # Serve static error page on proxy error
-    handle_errors {
-        @502 error 502
-        rewrite @502 /unavailable.html
-        root * /srv/helfertool/
-        file_server
-    }
+#    handle_errors {
+#        @502 error 502
+#        rewrite @502 /unavailable.html
+#       root * /staticfiles
+#        file_server
+#    }
 
-    # Set maximum allowed size for client request bodies
-    client_max_body_size 50M
 
+    # static files
     # Logging
     log {
         output file /var/log/caddy/helfertool.viklaas.com.log

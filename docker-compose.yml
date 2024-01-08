@@ -1,39 +1,54 @@
 version: '3'
 services:
   caddy:
+#    name: helfercaddy
     image: caddy/caddy:latest
+#    user: "1001"
     volumes:
       - /srv/data:/srv/caddy
+      - /srv/caddy/Caddyfile:/etc/caddy/Caddyfile
       - static_volume:/staticfiles
       - media_volume:/media
+    ports:
+      - 80:80
+      - 443:443
 
   rabbitmq:
     image: rabbitmq:3-management
+#    name: helferrabbit
     env_file:
       - .env
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
     ports:
-      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:5673:5672"
       - "127.0.0.1:15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
   db:
     image: postgres:latest
+#    name: helferdb
     env_file:
       - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d
+      - /srv/postgres/postgres-init:/docker-entrypoint-initdb.d
 
   web:
     image: helfertool/helfertool:latest
+    user: "10001:10001"
+#    name: web
     volumes:
       - static_volume:/staticfiles
       - media_volume:/media
-      - /etc/helfertool/helfertool.yaml:/config/helfertool.yaml
+      - /srv/helfertool/tmp:/tmp
+      - helfertool_volume:/helfertool/run
+      - /srv/helfertool/data:/data
+      - /srv/helfertool/log:/log
+      - /srv/helfertool/healthcheck.sh:/usr/local/bin/healthcheck
+      - /srv/helfertool/helfertool.yaml:/config/helfertool.yaml
     env_file:
       - .env
     depends_on:
@@ -43,5 +58,9 @@ services:
 volumes:
   static_volume:
   media_volume:
+  tmp_volume:
   postgres_data:
   rabbitmq_data:
+  helfertool_volume:
+  helfer_data_volume:
+  helfer_log_volume:
